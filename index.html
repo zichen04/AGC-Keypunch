@@ -30,6 +30,24 @@
       (the rest of the deck shifts to make room). Then you can assemble the deck and run the code! Execution happens in order of the cards.</p>
   </div>
 
+  <!-- ============== QUICK REFERENCE ============== -->
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Quick Reference</div>
+    </div>
+    <p class="dev-note">
+      This AGC-inspired simulator uses 4-bit opcodes and a 12-bit address-table ID, so it can
+      switch banks automatically. Execution begins at <code>START</code> if present, otherwise at
+      the first instruction. Reaching a word without an instruction finishes the program.
+      <code>TC Q</code> returns from a subroutine. The arithmetic and INDEX behavior below is
+      simplified for this simulator.
+    </p>
+    <table class="isa-table" id="isaTable">
+      <thead><tr><th>Mnemonic</th><th>Class</th><th>Description</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
   <!-- ============== NEW CARD PANEL ============== -->
   <div class="panel">
     <div class="panel-head">
@@ -82,21 +100,8 @@
 
   <!-- ============== DEV / ASSEMBLER PANEL ============== -->
   <section class="dev-panel">
-    <h2>Assembler &amp; Simulator — developer console</h2>
+    <h2>Assembler &amp; Simulator</h2>
     <div class="dev-body">
-      <p class="dev-note">
-        This AGC-inspired simulator uses 4-bit opcodes and a 12-bit address-table ID, so it can
-        switch banks automatically. Assemble the deck, then Step or Run. Execution begins at
-        <code>START</code> if present, otherwise at the first instruction. Reaching a word without
-        an instruction finishes the program. <code>TC Q</code> returns from a subroutine.
-        The arithmetic and INDEX behavior below is simplified for this simulator.
-      </p>
-
-      <table class="isa-table" id="isaTable">
-        <thead><tr><th>Mnemonic</th><th>Class</th><th>Description</th></tr></thead>
-        <tbody></tbody>
-      </table>
-
       <div class="deck-toolbar">
         <button class="btn btn-sm" id="btnAssemble">Assemble deck</button>
         <button class="btn btn-sm" id="btnStep" disabled>Step ▸</button>

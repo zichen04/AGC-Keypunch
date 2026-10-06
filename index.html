@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGC Keypunch — Assembly Simulator</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- Shared punch-card base (corner cut, row labels, guide digits, rule line) generated once in JS and reused via <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="cardBase" viewBox="0 0 0 0"></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-card-holder">
+      <div class="hero-card" id="heroCard" style="max-width:760px;width:100%;"></div>
+    </div>
+    <p class="hero-sub">The flight software of the Apollo 
+      Guidance Computer used magnetic core-rope memory, meaning programmers of the day had to write their code on paper and 
+      type it into punch cards. This code was rigorously tested on giant mainframes. Once approved by NASA, the compiled binary 
+      data was sent to a Raytheon factory. There, factory workers physically wove copper wire through magnetic rings
+       to create the hardware memory modules, literally weaving the software into existence. <br> <br> In this simulator you can type a line of Apollo Guidance Computer assembly, and watch it get punched onto an 
+      80&#8209;column IBM card. Each punch card is 1 line of assembly, you can re-order the cards by changing their number 
+      (the rest of the deck shifts to make room). Then you can assemble the deck and run the code! Execution happens in order of the cards.</p>
+  </div>
+
+  <!-- ============== NEW CARD PANEL ============== -->
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Create a Punch Card</div>
+    </div>
+
+    <div class="sheet">
+      <div class="field-grid">
+        <div class="field-cap">1–8<b>LABEL</b></div>
+        <div class="field-cap">9<b>&nbsp;</b></div>
+        <div class="field-cap">10–15<b>OPCODE</b></div>
+        <div class="field-cap">16–24<b>OPERAND</b></div>
+        <div class="field-cap">25–80<b>COMMENT</b></div>
+
+        <input class="field-input" id="inLabel" maxlength="8" spellcheck="false" autocomplete="off" placeholder="">
+        <div class="field-blank">·</div>
+        <input class="field-input" id="inOpcode" maxlength="6" spellcheck="false" autocomplete="off" placeholder="">
+        <input class="field-input" id="inOperand" maxlength="9" spellcheck="false" autocomplete="off" placeholder="">
+        <input class="field-input comment-input" id="inComment" maxlength="56" spellcheck="false" autocomplete="off" placeholder="">
+      </div>
+
+      <div class="sheet-actions">
+        <button class="btn btn-primary" id="btnPunch">⏎ Punch Card</button>
+        <button class="btn btn-ghost" id="btnClearForm">Clear</button>
+        <span class="edit-banner" id="editBanner">Editing card #<span id="editingNum"></span> — <a id="cancelEdit">cancel</a></span>
+        <div class="spacer"></div>
+      </div>
+    </div>
+
+    <div class="preview-label">Live preview</div>
+    <div class="card-tile" id="previewTile"></div>
+  </div>
+
+  <!-- ============== DECK PANEL ============== -->
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">The Deck <span class="num" id="deckCountLabel">(0 cards)</span></div>
+    </div>
+    <div class="deck-toolbar">
+      <button class="btn btn-sm" id="btnExport">Export deck (.json)</button>
+      <button class="btn btn-sm" id="btnImport">Import deck</button>
+      <input type="file" id="fileImport" accept="application/json" style="display:none">
+      <button class="btn btn-sm" id="btnSeed">Load example deck</button>
+      <div class="spacer"></div>
+      <button class="btn btn-sm btn-danger" id="btnClearDeck">Clear deck</button>
+    </div>
+    <div id="deckStatusArea"></div>
+    <div class="deck-grid" id="deckGrid"></div>
+  </div>
+
+  <!-- ============== DEV / ASSEMBLER PANEL ============== -->
+  <section class="dev-panel">
+    <h2>Assembler &amp; Simulator — developer console</h2>
+    <div class="dev-body">
+      <p class="dev-note">
+        This AGC-inspired simulator uses 4-bit opcodes and a 12-bit address-table ID, so it can
+        switch banks automatically. Assemble the deck, then Step or Run. Execution begins at
+        <code>START</code> if present, otherwise at the first instruction. Reaching a word without
+        an instruction finishes the program. <code>TC Q</code> returns from a subroutine.
+        The arithmetic and INDEX behavior below is simplified for this simulator.
+      </p>
+
+      <table class="isa-table" id="isaTable">
+        <thead><tr><th>Mnemonic</th><th>Class</th><th>Description</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="deck-toolbar">
+        <button class="btn btn-sm" id="btnAssemble">Assemble deck</button>
+        <button class="btn btn-sm" id="btnStep" disabled>Step ▸</button>
+        <button class="btn btn-sm" id="btnRun" disabled>Run ▸</button>
+        <button class="btn btn-sm" id="btnReset" disabled>Reset</button>
+      </div>
+      <pre class="listing" id="listingOut">Assemble the deck to see the address / symbol table listing here.</pre>
+      <div class="sim-status" id="simStatus" role="status">Assemble a deck to begin.</div>
+      <div class="sim-state">
+        <section><h3>Registers</h3><pre class="listing" id="registerOut">No program loaded.</pre></section>
+        <section><h3>Named memory</h3><pre class="listing" id="memoryOut">No program loaded.</pre></section>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Card face set in <a href="https://online-fonts.com/fonts/keypunch029" target="_blank" rel="noopener">Keypunch029</a> by Stewart C. Russell (OFL) — a reconstruction of the IBM Type 29 keypunch print font.
+  </footer>
+
+</div>
+
+<script type="module" src="./js/ui.js"></script>
+</body>
+</html>
